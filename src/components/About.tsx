@@ -20,7 +20,7 @@ export default function About() {
           </div>
 
           {/* Texto */}
-          <div>
+          <div className="order-2 md:order-1 text-center md:text-left">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4 sm:mb-6 leading-tight">Sobre Mim</h2>
             <div className="text-gray-600 text-base sm:text-lg leading-relaxed">
               <p>
