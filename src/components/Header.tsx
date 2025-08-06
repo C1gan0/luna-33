@@ -1,4 +1,3 @@
-// components/Header.tsx
 'use client';
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -6,15 +5,23 @@ import Link from "next/link";
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null); // Novo: referência para o botão
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen(prev => !prev);
   };
 
-  // Fecha o menu ao clicar fora
+  // Fecha o menu ao clicar fora dele e do botão
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(target)
+      ) {
         setMenuOpen(false);
       }
     }
@@ -54,7 +61,11 @@ export default function Header() {
 
         {/* Botão Mobile */}
         <div className="md:hidden">
-          <button onClick={toggleMenu} className="focus:outline-none text-gray-700">
+          <button
+            ref={buttonRef}
+            onClick={toggleMenu}
+            className="focus:outline-none text-gray-700"
+          >
             <svg
               className="w-6 h-6"
               fill="none"
@@ -70,7 +81,10 @@ export default function Header() {
 
       {/* Menu Mobile */}
       {menuOpen && (
-        <div ref={menuRef} className="md:hidden px-4 pb-4 pt-2 bg-white shadow-md space-y-2">
+        <div
+          ref={menuRef}
+          className="md:hidden px-4 pb-4 pt-2 bg-white shadow-md space-y-2"
+        >
           <Link href="#home" className="block text-gray-700 hover:text-indigo-600 transition">
             Início
           </Link>
