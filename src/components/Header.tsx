@@ -1,14 +1,32 @@
 // components/Header.tsx
 'use client';
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  // Fecha o menu ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
 
   return (
     <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
@@ -52,7 +70,7 @@ export default function Header() {
 
       {/* Menu Mobile */}
       {menuOpen && (
-        <div className="md:hidden px-4 pb-4 pt-2 bg-white shadow-md space-y-2">
+        <div ref={menuRef} className="md:hidden px-4 pb-4 pt-2 bg-white shadow-md space-y-2">
           <Link href="#home" className="block text-gray-700 hover:text-indigo-600 transition">
             Início
           </Link>
