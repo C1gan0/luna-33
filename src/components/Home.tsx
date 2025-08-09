@@ -100,7 +100,7 @@ export default function Home() {
       </div>
 
       {/* Conteúdo principal */}
-      <div className="relative z-10 max-w-4xl text-left -mt-12 md:mt-12">
+      <div className="relative z-10 max-w-4xl text-left -mt-14 md:mt-12">
         <span className="text-xs md:text-sm text-purple-400 tracking-wide uppercase">
           De desenvolvedor para cliente
         </span>

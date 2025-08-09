@@ -1,67 +1,50 @@
 'use client';
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { X, Menu } from "lucide-react";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const toggleMenu = () => {
     setMenuOpen(prev => !prev);
   };
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      const target = event.target as Node;
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(target)
-      ) {
-        setMenuOpen(false);
-      }
-    }
-
-    if (menuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [menuOpen]);
-
   return (
     <header className="fixed top-0 w-full bg-black text-white z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+      {/* Barra principal */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16 md:h-24">
         <div className="text-2xl font-bold tracking-tight lg:-ml-16">CrvCompany</div>
 
-        <nav className="hidden md:flex space-x-6">
+        {/* Menu Desktop */}
+        <nav className="hidden md:flex space-x-8 h-full items-center">
           <Link href="#home" className="hover:text-purple-400 transition-colors">Início</Link>
           <Link href="#about" className="hover:text-purple-400 transition-colors">Sobre</Link>
           <Link href="#services" className="hover:text-purple-400 transition-colors">Serviços</Link>
           <Link href="#contact" className="hover:text-purple-400 transition-colors">Contato</Link>
         </nav>
 
-        <div className="md:hidden z-50">
-          <button ref={buttonRef} onClick={toggleMenu} className="focus:outline-none text-white">
-            {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        {/* Botão Mobile (esconde quando menu está aberto) */}
+        <div className={`md:hidden z-50 ${menuOpen ? "hidden" : ""}`}>
+          <button onClick={toggleMenu} className="focus:outline-none text-white">
+            <Menu className="w-6 h-6" />
           </button>
         </div>
       </div>
 
+      {/* Linha atravessando toda a tela */}
+      <div className="w-full h-[2px] bg-purple-500"></div>
+
+      {/* Menu Mobile */}
       {menuOpen && (
-        <div
-          ref={menuRef}
-          className="fixed inset-0 z-40 bg-black text-white flex flex-col transition-opacity duration-300"
-        >
+        <div className="fixed inset-0 z-40 bg-black text-white flex flex-col transition-opacity duration-300">
           {/* Topo com CrvCompany e X */}
           <div className="bg-black flex items-center justify-between px-6 py-4 border-b border-purple-600">
             <div className="text-2xl font-bold">CrvCompany</div>
+            <button onClick={() => setMenuOpen(false)}>
+              <X className="w-6 h-6" />
+            </button>
           </div>
 
           {/* Navegação */}
