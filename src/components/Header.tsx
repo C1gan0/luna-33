@@ -38,7 +38,7 @@ export default function Header() {
   return (
     <header className="fixed top-0 w-full bg-black text-white z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-        <div className="text-2xl font-bold tracking-tight">CrvCompany</div>
+        <div className="text-2xl font-bold tracking-tight lg:-ml-16">CrvCompany</div>
 
         <nav className="hidden md:flex space-x-6">
           <Link href="#home" className="hover:text-purple-400 transition-colors">Início</Link>
