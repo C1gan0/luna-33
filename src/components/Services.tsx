@@ -1,113 +1,130 @@
-// components/Services.tsx
 "use client";
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React from "react";
 
-interface PortfolioItem {
-  id: number;
+interface ServiceBox {
   title: string;
   description: string;
-  image: string;
 }
 
-const portfolioItems: PortfolioItem[] = [
+const serviceBoxes: ServiceBox[] = [
   {
-    id: 1,
-    title: 'Landing Page para Startup',
-    description: 'Desenvolvimento de uma landing page moderna e responsiva para uma startup de tecnologia, focando em alta conversão e otimização de SEO.',
-    image: '/portfolio-1.jpg',
+    title: "Implementar Odoo",
+    description:
+      "Minha empresa gira em Excel ou um ERP duque não é satisfatório.",
   },
   {
-    id: 2,
-    title: 'E-commerce de Roupas',
-    description: 'Criação de um e-commerce completo com funcionalidades de carrinho, checkout seguro e gerenciamento de produtos, utilizando React e Next.js.',
-    image: '/portfolio-2.jpg',
+    title: "Melhore meu Odoo",
+    description:
+      "Minha empresa está déjà sur Odoo e eu quero um parceiro para me ajudar.",
   },
   {
-    id: 3,
-    title: 'Dashboard de Análises',
-    description: 'Interface de usuário para um dashboard de análises de dados, com gráficos interativos e visualização em tempo real de métricas importantes.',
-    image: '/portfolio-3.jpg',
+    title: "Desenvolvedor sob medida",
+    description:
+      "Eu pesquisei especialistas em Php, Python, Magento, Hubspot ou Wordpress.",
   },
   {
-    id: 4,
-    title: 'Aplicativo Mobile-first',
-    description: 'Design e desenvolvimento de um aplicativo web com foco total na experiência do usuário em dispositivos móveis, utilizando as melhores práticas de mobile-first.',
-    image: '/portfolio-4.jpg',
+    title: "Realizar uma análise",
+    description:
+      "Custo e ROI de um novo ERP. Due Diligence para M&A. Roteiro e estratégia informática.",
   },
 ];
 
 export default function Services() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
-
-  const handleOpenModal = (item: PortfolioItem) => {
-    setSelectedItem(item);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedItem(null);
-  };
-
   return (
-    // Aumentamos o padding vertical (py) para dar mais altura à seção
-    <section id="services" className="bg-white py-24 px-6 md:py-32 md:px-12">
-      {/* Removido max-w-7xl para que o conteúdo ocupe toda a largura disponível */}
-      <div className="mx-auto text-center">
-        {/* Adicionamos uma margem inferior maior (mb) para separar o título do grid */}
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-16">Meus Serviços & Portfólio</h2>
-        
-        {/* Aumentamos o espaçamento (gap) entre as colunas para dar mais ar */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-          {portfolioItems.map((item: PortfolioItem) => (
-            <div
-              key={item.id}
-              className="group cursor-pointer relative overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105"
-              onClick={() => handleOpenModal(item)}
-            >
-              <Image
-                src={item.image}
-                alt={item.title}
-                width={500}
-                height={500}
-                className="w-full h-auto object-cover"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-end p-4">
-                <h3 className="text-white text-xl font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                  {item.title}
-                </h3>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+    <main className="bg-white text-black">
+      {/* Seção original */}
+      <section id="services" className="py-24 md:py-32 px-6 md:px-12">
+        <div className="mx-auto max-w-7xl">
+          {/* Título */}
+          <div className="max-w-4xl text-left mb-12">
+            <span className="text-xs md:text-sm text-purple-600 font-semibold uppercase tracking-widest">
+              Serviços & Portfólio
+            </span>
+            <h2 className="mt-4 text-3xl md:text-5xl font-light tracking-wide leading-tight text-gray-900">
+              Como podemos ajudar?
+            </h2>
+          </div>
 
-      {isModalOpen && selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full p-8 relative">
-            <button 
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl font-bold"
-              onClick={handleCloseModal}
-            >
-              &times;
-            </button>
-            <h3 className="text-3xl font-bold text-gray-800 mb-4">{selectedItem.title}</h3>
-            <p className="text-gray-600 text-lg">{selectedItem.description}</p>
-            <div className="mt-6">
-              <Image
-                src={selectedItem.image}
-                alt={selectedItem.title}
-                width={800}
-                height={600}
-                className="rounded-lg shadow-md w-full h-auto"
-              />
+          {/* Grid de 4 caixas */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 text-left">
+            {serviceBoxes.map(({ title, description }, idx) => (
+              <div
+                key={idx}
+                className="p-10 border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-purple-600 transition-all duration-300"
+              >
+                <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4">
+                  {title}
+                </h3>
+                <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                  {description}
+                </p>
+                <button className="text-purple-600 font-semibold hover:underline flex items-center gap-1">
+                  Saiba mais <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 🔽 NOVA SEÇÃO ADICIONADA AQUI 🔽 */}
+      <section className="bg-gradient-to-b from-[#0F0F0F] to-black py-32 px-6 md:px-12 text-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-6">Nossos serviços</h2>
+          <p className="text-lg text-center text-gray-300 mb-16">
+            Soluções digitais personalizadas para sua empresa crescer com tecnologia.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {/* Card 1 */}
+            <div className="border border-pink-500 rounded-2xl p-6 hover:shadow-lg transition">
+              <h3 className="text-xl font-semibold mb-4">Projeto ERP Odoo</h3>
+              <ul className="space-y-2 text-gray-300 text-sm">
+                <li>Odoo Ecommerce e PIM</li>
+                <li>Odoo CRM</li>
+                <li>Odoo ERP</li>
+                <li>Odoo MRP</li>
+                <li>Compatibilidade Odoo</li>
+                <li>Painel e relatórios do Odoo</li>
+                <li>Pagamento: Stripe e Ingenico</li>
+              </ul>
+              <a href="/odoo-erp" className="block mt-6 text-pink-400 hover:underline font-medium">
+                Descubra Odoo →
+              </a>
+            </div>
+
+            {/* Card 2 */}
+            <div className="border border-yellow-400 rounded-2xl p-6 hover:shadow-lg transition">
+              <h3 className="text-xl font-semibold mb-4">Solução sobre medida</h3>
+              <ul className="space-y-2 text-gray-300 text-sm">
+                <li>PHP</li>
+                <li>Python</li>
+                <li>Java</li>
+                <li>Imprensa mundial</li>
+                <li>Magento</li>
+              </ul>
+              <a href="/desenvolvimento" className="block mt-6 text-yellow-300 hover:underline font-medium">
+                Desenvolvimento →
+              </a>
+            </div>
+
+            {/* Card 3 */}
+            <div className="border border-green-400 rounded-2xl p-6 hover:shadow-lg transition">
+              <h3 className="text-xl font-semibold mb-4">Infraestrutura de TI</h3>
+              <ul className="space-y-2 text-gray-300 text-sm">
+                <li>Servidor Cloud Azure</li>
+                <li>Servidor Cloud AWS</li>
+                <li>Manutenção</li>
+                <li>Segurança</li>
+                <li>Rede</li>
+              </ul>
+              <a href="/infraestrutura-ti" className="block mt-6 text-green-300 hover:underline font-medium">
+                Infraestrutura de TI →
+              </a>
             </div>
           </div>
         </div>
-      )}
-    </section>
+      </section>
+    </main>
   );
 }

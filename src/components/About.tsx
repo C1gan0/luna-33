@@ -12,6 +12,19 @@ type TypewriterSequenceProps = {
   className?: string;
 };
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  return isMobile;
+}
+
 function TypewriterSequence({
   texts,
   speed = 30,
@@ -91,9 +104,10 @@ function TypewriterSequence({
 export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
-    const element = sectionRef.current; // ✅ copia ref para evitar aviso do ESLint
+    const element = sectionRef.current;
     if (!element) return;
 
     const observer = new IntersectionObserver(
@@ -136,7 +150,7 @@ export default function About() {
               {inView && (
                 <TypewriterSequence
                   texts={["Sobre Mim"]}
-                  speed={50}
+                  speed={isMobile ? 180 : 50} // ↓ muito mais lento no mobile
                   paragraphDelay={0}
                   startDelay={0}
                   className="text-black"
@@ -151,7 +165,7 @@ export default function About() {
                     "Sou desenvolvedor web focado em criar experiências rápidas, seguras e visualmente atraentes.",
                     "Trabalho com React e Next.js, entregando performance e design moderno para negócios digitais.",
                   ]}
-                  speed={20}
+                  speed={isMobile ? 140 : 20} // ↓ muito mais lento no mobile
                   paragraphDelay={350}
                   className="text-gray-500"
                 />
@@ -167,7 +181,7 @@ export default function About() {
                     "Segurança é prioridade em cada projeto — aplico as melhores práticas para proteger dados e garantir estabilidade.",
                     "Além do desenvolvimento, ofereço manutenção e otimização, sempre buscando máxima performance e experiência impecável.",
                   ]}
-                  speed={20}
+                  speed={20} // velocidade normal no desktop
                   paragraphDelay={500}
                   className="text-gray-600"
                 />

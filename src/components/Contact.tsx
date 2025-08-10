@@ -1,13 +1,11 @@
-// components/Contact.tsx
 "use client";
 
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-// 1. Defina o schema de validação com Zod
-// Isso garante que os dados do formulário tenham a estrutura e o formato corretos
+// Esquema de validação
 const contactFormSchema = z.object({
   name: z.string().min(3, "O nome deve ter no mínimo 3 caracteres."),
   email: z.string().email("Por favor, insira um e-mail válido."),
@@ -15,14 +13,12 @@ const contactFormSchema = z.object({
   message: z.string().min(10, "A mensagem deve ter no mínimo 10 caracteres."),
 });
 
-// 2. Extraia o tipo dos dados do formulário a partir do schema
 type ContactFormData = z.infer<typeof contactFormSchema>;
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
 
-  // 3. Inicialize o useForm com o resolver do Zod
   const {
     register,
     handleSubmit,
@@ -32,118 +28,183 @@ export default function Contact() {
     resolver: zodResolver(contactFormSchema),
   });
 
-  // 4. Função que lida com o envio do formulário
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
     setSubmissionSuccess(false);
-
-    // Simulação de envio para um backend
-    console.log("Dados do formulário:", data);
-    
     try {
-      // Exemplo de como você enviaria os dados para um endpoint
-      // const response = await fetch('/api/contact', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data),
-      // });
-      
-      // if (response.ok) {
-      //   setSubmissionSuccess(true);
-      //   reset(); // Limpa o formulário após o envio
-      // } else {
-      //   throw new Error('Falha no envio.');
-      // }
-      
-      // Simulação de delay para mostrar o estado de envio
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simula envio
       setSubmissionSuccess(true);
       reset();
-      
     } catch (error) {
       console.error("Erro ao enviar o formulário:", error);
-      // Você pode adicionar um estado para exibir uma mensagem de erro ao usuário
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    // Usa classes de espaçamento e background similares à seção Services
-    <section id="contact" className="bg-white py-24 px-6 md:py-32 md:px-12">
-      <div className="mx-auto text-center">
-        {/* Título com a mesma tipografia e margem da seção Services */}
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-16">Entre em Contato</h2>
-        
+    <section
+      id="contato"
+      className="bg-white py-24 px-6 md:py-32 md:px-12"
+      aria-label="Formulário de contato"
+    >
+      <div className="mx-auto max-w-xl text-center">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-12">
+          Entre em Contato
+        </h2>
+
         {submissionSuccess && (
-          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-8" role="alert">
-            <p className="font-bold">Mensagem enviada com sucesso!</p>
-            <p>Em breve entraremos em contato com você.</p>
+          <div
+            className="flex items-center justify-center gap-3 bg-green-50 border border-green-400 text-green-700 p-4 rounded-md mb-10 animate-fade-in"
+            role="alert"
+          >
+            <svg
+              className="w-6 h-6 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <p className="font-semibold text-lg">
+              Mensagem enviada com sucesso! Em breve entraremos em contato.
+            </p>
           </div>
         )}
 
-        {/* max-w-xl para centralizar e limitar a largura do formulário */}
-        <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl mx-auto space-y-6 text-left">
-          {/* Campo Nome */}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Seu Nome</label>
-            <input
-              type="text"
-              id="name"
-              {...register("name")}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              disabled={isSubmitting}
-            />
-            {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
-          </div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-8 text-left"
+          noValidate
+        >
+          {[
+            { id: "name", label: "Seu Nome", type: "text" },
+            { id: "email", label: "Seu E-mail", type: "email" },
+            { id: "subject", label: "Assunto", type: "text" },
+          ].map(({ id, label, type }) => (
+            <div key={id} className="relative">
+              <input
+                type={type}
+                id={id}
+                {...register(id as keyof ContactFormData)}
+                disabled={isSubmitting}
+                placeholder=" "
+                aria-invalid={!!errors[id as keyof ContactFormData]}
+                aria-describedby={`${id}-error`}
+                className={`peer block w-full appearance-none border-2 rounded-md bg-transparent px-3 pt-6 pb-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 ${
+                  errors[id as keyof ContactFormData]
+                    ? "border-red-500 ring-red-500 focus:border-red-500 focus:ring-red-500 animate-pulse"
+                    : "border-gray-300"
+                }`}
+              />
+              <label
+                htmlFor={id}
+                className="absolute left-3 top-2 z-10 origin-[0] scale-100 transform text-gray-500 duration-200 peer-placeholder-shown:translate-y-3 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1 peer-focus:scale-75 peer-focus:text-blue-600"
+              >
+                {label}
+              </label>
+              {errors[id as keyof ContactFormData] && (
+                <p
+                  id={`${id}-error`}
+                  className="mt-1 text-sm text-red-600 flex items-center gap-2"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M12 3C7.03 3 3 7.03 3 12s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z"
+                    />
+                  </svg>
+                  {errors[id as keyof ContactFormData]?.message}
+                </p>
+              )}
+            </div>
+          ))}
 
-          {/* Campo Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Seu E-mail</label>
-            <input
-              type="email"
-              id="email"
-              {...register("email")}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              disabled={isSubmitting}
-            />
-            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
-          </div>
-
-          {/* Campo Assunto */}
-          <div>
-            <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">Assunto</label>
-            <input
-              type="text"
-              id="subject"
-              {...register("subject")}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              disabled={isSubmitting}
-            />
-            {errors.subject && <p className="mt-1 text-sm text-red-600">{errors.subject.message}</p>}
-          </div>
-
-          {/* Campo Mensagem */}
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Sua Mensagem</label>
+          <div className="relative">
             <textarea
               id="message"
-              rows={4}
               {...register("message")}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               disabled={isSubmitting}
+              placeholder=" "
+              aria-invalid={!!errors.message}
+              aria-describedby="message-error"
+              className={`peer block w-full appearance-none border-2 rounded-md bg-transparent px-3 pt-6 pb-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm min-h-[120px] resize-none transition-all duration-200 ${
+                errors.message
+                  ? "border-red-500 ring-red-500 focus:border-red-500 focus:ring-red-500 animate-pulse"
+                  : "border-gray-300"
+              }`}
             />
-            {errors.message && <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>}
+            <label
+              htmlFor="message"
+              className="absolute left-3 top-2 z-10 origin-[0] scale-100 transform text-gray-500 duration-200 peer-placeholder-shown:translate-y-3 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1 peer-focus:scale-75 peer-focus:text-blue-600"
+            >
+              Mensagem
+            </label>
+            {errors.message && (
+              <p
+                id="message-error"
+                className="mt-1 text-sm text-red-600 flex items-center gap-2"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M12 3C7.03 3 3 7.03 3 12s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z"
+                  />
+                </svg>
+                {errors.message.message}
+              </p>
+            )}
           </div>
 
-          {/* Botão de Envio */}
-          <div className="flex justify-center">
+          <div className="pt-4">
             <button
               type="submit"
-              className="w-full sm:w-auto px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               disabled={isSubmitting}
+              className="inline-flex items-center justify-center px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? "Enviando..." : "Enviar Mensagem"}
+              {isSubmitting ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4l3.536-3.536A9 9 0 003 12h1z"
+                    ></path>
+                  </svg>
+                  Enviando...
+                </>
+              ) : (
+                "Enviar Mensagem"
+              )}
             </button>
           </div>
         </form>
